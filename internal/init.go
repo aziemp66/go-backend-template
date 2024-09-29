@@ -1,10 +1,10 @@
-package modules_user
+package init_app
 
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
 )
 
-func Register(router *gin.Engine, db *sqlx.DB) {
+func InitializeApp(router *gin.Engine, db *sqlx.DB) {
 
 }

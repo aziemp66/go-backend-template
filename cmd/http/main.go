@@ -8,7 +8,7 @@ import (
 	"syscall"
 	"time"
 
-	modules_user "github.com/Final-Project-Azie/e-commerce-be/internal/modules/user"
+	init_app "github.com/Final-Project-Azie/e-commerce-be/internal"
 	pkg_config "github.com/Final-Project-Azie/e-commerce-be/internal/pkg/config"
 	util_db "github.com/Final-Project-Azie/e-commerce-be/util/db"
 	util_http "github.com/Final-Project-Azie/e-commerce-be/util/http"
@@ -35,7 +35,7 @@ func main() {
 		util_http_middleware.ErrorHandlerMiddleware(),
 	)
 
-	modules_user.Register(router, pgDB)
+	init_app.InitializeApp(router, pgDB)
 
 	srv := &http.Server{
 		Addr:    ":8080",
