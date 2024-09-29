@@ -24,7 +24,7 @@ func TestUserRepositoryUpdateUser(t *testing.T) {
 	reqAddress := "456 New St"
 
 	t.Run("should update user successfully", func(t *testing.T) {
-		sqlMock.ExpectExec(updateUser).
+		sqlMock.ExpectExec(updateUserQuery).
 			WithArgs(userID, reqName, reqAddress).
 			WillReturnResult(sqlmock.NewResult(0, 1))
 
@@ -33,7 +33,7 @@ func TestUserRepositoryUpdateUser(t *testing.T) {
 	})
 
 	t.Run("should return error when update fails", func(t *testing.T) {
-		sqlMock.ExpectExec(updateUser).
+		sqlMock.ExpectExec(updateUserQuery).
 			WithArgs(userID, reqName, reqAddress).
 			WillReturnError(errors.New("db error"))
 

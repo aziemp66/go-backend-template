@@ -19,10 +19,10 @@ func TestUserRepositoryCreateUser(t *testing.T) {
 
 	repoMock := NewUserRepositoryPostgres(sqlx.NewDb(db, "sqlmock"))
 
-	reqName := "John Doe"
-	reqAddress := "123 Main St"
 	reqEmail := "johndoe@example.com"
 	reqPassword := "securepassword"
+	reqName := "John Doe"
+	reqAddress := "123 Main St"
 	returnedID := "1"
 
 	t.Run("should insert user and return ID", func(t *testing.T) {
@@ -30,7 +30,7 @@ func TestUserRepositoryCreateUser(t *testing.T) {
 			WithArgs(reqEmail, reqPassword, reqName, reqAddress).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(returnedID))
 
-		id, err := repoMock.CreateUser(context.Background(), reqName, reqAddress, reqEmail, reqPassword)
+		id, err := repoMock.CreateUser(context.Background(), reqEmail, reqPassword, reqName, reqAddress)
 		assert.Nil(t, err)
 		assert.Equal(t, returnedID, id)
 	})

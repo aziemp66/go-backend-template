@@ -22,7 +22,7 @@ func TestUserRepositoryDeleteUser(t *testing.T) {
 	userID := "1"
 
 	t.Run("should delete user successfully", func(t *testing.T) {
-		sqlMock.ExpectExec(deleteUser).
+		sqlMock.ExpectExec(deleteUserQuery).
 			WithArgs(userID).
 			WillReturnResult(sqlmock.NewResult(0, 1))
 
@@ -31,7 +31,7 @@ func TestUserRepositoryDeleteUser(t *testing.T) {
 	})
 
 	t.Run("should return error when delete fails", func(t *testing.T) {
-		sqlMock.ExpectExec(deleteUser).
+		sqlMock.ExpectExec(deleteUserQuery).
 			WithArgs(userID).
 			WillReturnError(errors.New("db error"))
 

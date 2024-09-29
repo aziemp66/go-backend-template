@@ -10,13 +10,13 @@ const (
 	getUserByEmail = `
 	SELECT (email, password, name, address) FROM user WHERE email = $1
 	`
-	updateUser = `
+	updateUserQuery = `
 	UPDATE user set name = $2, address = $3 WHERE user = $1
 	`
 	changePasswordQuery = `
 	UPDATE user set password = $2 WHERE email = $1
 	`
-	deleteUser = `
+	deleteUserQuery = `
 	DELETE FROM user WHERE id = $1
 	`
 )
