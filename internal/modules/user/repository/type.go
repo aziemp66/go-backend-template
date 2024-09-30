@@ -13,4 +13,5 @@ type UserRepository interface {
 	ChangePassword(ctx context.Context, email, hashedPassword string) (err error)
 	UpdateUser(ctx context.Context, id string, name, address string) (err error)
 	DeleteUser(ctx context.Context, id string) (err error)
+	VerifyUser(ctx context.Context, email string) (err error)
 }
