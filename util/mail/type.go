@@ -1,11 +1,7 @@
 package util_mail
 
-type (
-	EmailVerification struct {
-		Token string
-	}
+import "gopkg.in/gomail.v2"
 
-	PasswordReset struct {
-		Token string
-	}
-)
+type MailManager interface {
+	SentMessage(msg *gomail.Message) error
+}

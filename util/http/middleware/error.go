@@ -3,8 +3,8 @@ package util_http_middleware
 import (
 	"github.com/gin-gonic/gin"
 
-	util_error "github.com/Final-Project-Azie/e-commerce-be/util/error"
-	util_http "github.com/Final-Project-Azie/e-commerce-be/util/http"
+	util_error "backend-template/util/error"
+	util_http "backend-template/util/http"
 )
 
 func ErrorHandlerMiddleware() gin.HandlerFunc {

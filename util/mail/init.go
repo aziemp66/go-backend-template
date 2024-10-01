@@ -1,29 +1,23 @@
 package util_mail
 
 import (
-	"io"
-
 	gomail "gopkg.in/gomail.v2"
 )
 
-func New(email string, password string, host string, portNumber int) *gomail.Dialer {
+type mailManager struct {
+	dialer *gomail.Dialer
+}
+
+func NewMailManager(host string, portNumber int, email string, password string) MailManager {
 	dialer := gomail.NewDialer(host, portNumber, email, password)
-	return dialer
+
+	return &mailManager{
+		dialer: dialer,
+	}
 }
 
-func NewMessage(from, to, subject, body string) *gomail.Message {
-	mailer := gomail.NewMessage()
-	mailer.SetHeader("From", from)
-	mailer.SetHeader("To", to)
-	mailer.SetHeader("Cc", from)
-	mailer.SetHeader("Subject", subject)
-	mailer.SetBody("text/html", body)
-	return mailer
-}
+func (m *mailManager) SentMessage(msg *gomail.Message) error {
+	err := m.dialer.DialAndSend(msg)
 
-func AttachFile(message *gomail.Message, filename string, fileBytes []byte) {
-	message.Attach(filename, gomail.SetCopyFunc(func(w io.Writer) error {
-		_, err := w.Write(fileBytes)
-		return err
-	}))
+	return err
 }

@@ -4,31 +4,32 @@ import (
 	"errors"
 	"time"
 
-	util_error "github.com/Final-Project-Azie/e-commerce-be/util/error"
+	util_error "backend-template/util/error"
+
 	jwt "github.com/golang-jwt/jwt/v5"
 )
 
-type JWTManager struct {
+type jwtManager struct {
 	AccessTokenKey []byte
 }
 
-func NewJWTManager(accessTokenKey string) *JWTManager {
-	return &JWTManager{AccessTokenKey: []byte(accessTokenKey)}
+func NewjwtManager(accessTokenKey string) JWTManager {
+	return &jwtManager{AccessTokenKey: []byte(accessTokenKey)}
 }
 
-func (j JWTManager) GenerateAuthToken(
-	identifier string,
+func (j jwtManager) GenerateAuthToken(
+	ID string,
 	name string,
-	role string,
+	role ROLE,
 	duration time.Duration,
 ) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, AuthClaims{
-		Name:       name,
-		Identifier: identifier,
-		Role:       role,
+		Name: name,
+		ID:   ID,
+		Role: role,
 		RegisteredClaims: jwt.RegisteredClaims{
-			// ExpiresAt: jwt.NewNumericDate(time.Now().Add(duration)),
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 365 * 10)),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(duration)),
+			// ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 365 * 10)),
 		},
 	})
 
@@ -40,7 +41,7 @@ func (j JWTManager) GenerateAuthToken(
 	return tokenString, nil
 }
 
-func (j JWTManager) VerifyAuthToken(tokenString string) (claim *AuthClaims, err error) {
+func (j jwtManager) VerifyAuthToken(tokenString string) (claim *AuthClaims, err error) {
 	claim = &AuthClaims{}
 
 	tkn, err := jwt.ParseWithClaims(tokenString, claim, func(t *jwt.Token) (interface{}, error) {
