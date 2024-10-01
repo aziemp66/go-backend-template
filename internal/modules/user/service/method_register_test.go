@@ -2,11 +2,15 @@ package user_service
 
 import (
 	"context"
+	"database/sql"
 	"errors"
+	"fmt"
 	"testing"
 
+	user_model "backend-template/internal/modules/user/model"
 	mock_repository "backend-template/mock/repository"
 	mock_util "backend-template/mock/util"
+	util_error "backend-template/util/error"
 	util_jwt "backend-template/util/jwt"
 
 	"github.com/stretchr/testify/assert"
@@ -27,13 +31,15 @@ func TestUserServiceRegister(t *testing.T) {
 	reqPassword := "password123"
 	reqName := "Test User"
 	reqAddress := "123 Test St"
-	reqID := "1"
 
 	resToken := "expected_toked"
+	resID := "1"
 
 	t.Run("should register a new user", func(t *testing.T) {
+		repoMock.EXPECT().GetUserByEmail(gomock.Any(), reqEmail).Return(user_model.User{}, sql.ErrNoRows)
+
 		repoMock.EXPECT().CreateUser(gomock.Any(), reqEmail, reqPassword, reqName, reqAddress).
-			Return(reqID, nil)
+			Return(resID, nil)
 
 		id, err := service.Register(context.Background(), reqEmail, reqPassword, reqName, reqAddress)
 
@@ -44,7 +50,7 @@ func TestUserServiceRegister(t *testing.T) {
 		mailMock.EXPECT().SentMessage(gomock.Any()).Return(nil)
 
 		require.NoError(t, err)
-		assert.Equal(t, reqID, id)
+		assert.Equal(t, resID, id)
 	})
 
 	t.Run("should return error when failed retrieving from db", func(t *testing.T) {
@@ -58,5 +64,25 @@ func TestUserServiceRegister(t *testing.T) {
 		require.Error(t, err)
 		assert.Empty(t, id)
 		assert.Equal(t, expectedErr, err)
+	})
+
+	t.Run("should return client error when email is already used", func(t *testing.T) {
+		repoRes := user_model.User{
+			ID:         resID,
+			Email:      reqEmail,
+			Password:   reqPassword,
+			Name:       reqName,
+			Address:    reqAddress,
+			IsVerified: true,
+		}
+		repoMock.EXPECT().GetUserByEmail(gomock.Any(), reqEmail).Return(repoRes, nil)
+
+		id, err := service.Register(context.Background(), reqEmail, reqPassword, reqName, reqAddress)
+
+		expectedErr := util_error.NewBadRequest(fmt.Errorf("%s is already registered", reqEmail), fmt.Sprintf("Email %s is already used", reqEmail))
+
+		assert.Error(t, err)
+		assert.Empty(t, id)
+		assert.EqualError(t, err, expectedErr.Message)
 	})
 }
