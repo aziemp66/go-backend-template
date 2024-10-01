@@ -1,1 +1,1 @@
-# e-commerce-be
+# Golang Backend Template
