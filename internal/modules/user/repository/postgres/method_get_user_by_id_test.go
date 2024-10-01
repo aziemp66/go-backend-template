@@ -5,8 +5,9 @@ import (
 	"errors"
 	"testing"
 
+	user_model "backend-template/internal/modules/user/model"
+
 	"github.com/DATA-DOG/go-sqlmock"
-	user_model "github.com/Final-Project-Azie/e-commerce-be/internal/modules/user/model"
 	"github.com/jmoiron/sqlx"
 	"github.com/stretchr/testify/assert"
 )

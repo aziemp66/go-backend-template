@@ -1,8 +1,8 @@
 package user_service
 
 import (
-	user_repository "github.com/Final-Project-Azie/e-commerce-be/internal/modules/user/repository"
-	util_jwt "github.com/Final-Project-Azie/e-commerce-be/util/jwt"
+	user_repository "backend-template/internal/modules/user/repository"
+	util_jwt "backend-template/util/jwt"
 )
 
 type userService struct {

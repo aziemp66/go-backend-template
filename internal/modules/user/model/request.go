@@ -4,7 +4,7 @@ type CreateUserRequest struct {
 	Name     string `json:"name" binding:"required"`
 	Address  string `json:"address" binding:"required"`
 	Email    string `json:"email" binding:"required,email"`
-	Password string `json:"password" binding:"required,gte=6"`
+	Password string `json:"password" binding:"required,gte=6,lte=72"`
 }
 
 type UpdateUserRequest struct {
@@ -14,13 +14,13 @@ type UpdateUserRequest struct {
 
 type LoginUserRequest struct {
 	Email    string `json:"email" binding:"required,email"`
-	Password string `json:"password" binding:"required,gte=6"`
+	Password string `json:"password" binding:"required,gte=6,lte=72"`
 }
 
 type ChangePasswordRequest struct {
 	Email       string `json:"email" binding:"required,email"`
-	OldPassword string `json:"old_password" binding:"required,gte=6"`
-	NewPassword string `json:"new_password" binding:"required,gte=6"`
+	OldPassword string `json:"old_password" binding:"required,gte=6,lte=72"`
+	NewPassword string `json:"new_password" binding:"required,gte=6,lte=72"`
 }
 
 type ForgotPasswordRequest struct {

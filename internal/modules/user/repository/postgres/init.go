@@ -1,7 +1,8 @@
 package user_repository_postgres
 
 import (
-	user_repository "github.com/Final-Project-Azie/e-commerce-be/internal/modules/user/repository"
+	user_repository "backend-template/internal/modules/user/repository"
+
 	"github.com/jmoiron/sqlx"
 )
 

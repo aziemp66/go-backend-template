@@ -1,4 +1,4 @@
-module github.com/Final-Project-Azie/e-commerce-be
+module backend-template
 
 go 1.23.1
 

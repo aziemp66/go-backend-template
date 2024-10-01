@@ -3,7 +3,7 @@ package user_service
 import (
 	"context"
 
-	user_model "github.com/Final-Project-Azie/e-commerce-be/internal/modules/user/model"
+	user_model "backend-template/internal/modules/user/model"
 )
 
 // Implements UserService

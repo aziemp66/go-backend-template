@@ -8,12 +8,13 @@ import (
 	"syscall"
 	"time"
 
-	init_app "github.com/Final-Project-Azie/e-commerce-be/internal"
-	pkg_config "github.com/Final-Project-Azie/e-commerce-be/internal/pkg/config"
-	util_db "github.com/Final-Project-Azie/e-commerce-be/util/db"
-	util_http "github.com/Final-Project-Azie/e-commerce-be/util/http"
-	util_http_middleware "github.com/Final-Project-Azie/e-commerce-be/util/http/middleware"
-	util_logger "github.com/Final-Project-Azie/e-commerce-be/util/logger"
+	init_app "backend-template/internal"
+	pkg_config "backend-template/internal/pkg/config"
+	util_db "backend-template/util/db"
+	util_http "backend-template/util/http"
+	util_http_middleware "backend-template/util/http/middleware"
+	util_logger "backend-template/util/logger"
+
 	"github.com/gin-gonic/gin"
 )
 
