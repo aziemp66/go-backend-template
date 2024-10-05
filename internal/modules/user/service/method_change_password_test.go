@@ -17,9 +17,11 @@ func TestUserServiceChangePassword(t *testing.T) {
 	defer ctrl.Finish()
 
 	repoMock := mock_repository.NewMockUserRepository(ctrl)
+	jwtMock := mock_util.NewMockJWTManager(ctrl)
 	passwordMock := mock_util.NewMockPasswordManager(ctrl)
+	mailMock := mock_util.NewMockMailManager(ctrl)
 
-	service := userService{userRepository: repoMock}
+	service := NewUserService(repoMock, jwtMock, passwordMock, mailMock)
 
 	email := "test@example.com"
 	oldPassword := "oldPassword123"
@@ -40,6 +42,8 @@ func TestUserServiceChangePassword(t *testing.T) {
 
 		passwordMock.EXPECT().CheckPasswordHash(oldPassword, repoRes.Password).Return(nil)
 
+		passwordMock.EXPECT().PasswordValidation(newPassword).Return(nil)
+
 		passwordMock.EXPECT().HashPassword(newPassword).Return(hashedPassword, nil)
 
 		repoMock.EXPECT().ChangePassword(gomock.Any(), email, hashedPassword).Return(nil)
@@ -52,10 +56,10 @@ func TestUserServiceChangePassword(t *testing.T) {
 	t.Run("should return error when failed retrieving db", func(t *testing.T) {
 		expectedErr := errors.New("error from db")
 
-		repoMock.EXPECT().ChangePassword(gomock.Any(), "", "").Return(expectedErr)
+		repoMock.EXPECT().GetUserByEmail(gomock.Any(), "").Return(user_model.User{}, expectedErr)
 
 		err := service.ChangePassword(context.Background(), "", "", "")
 
-		require.NoError(t, err)
+		require.EqualError(t, err, expectedErr.Error())
 	})
 }

@@ -9,6 +9,7 @@ import (
 
 	user_model "backend-template/internal/modules/user/model"
 	mock_repository "backend-template/mock/repository"
+	mock_util "backend-template/mock/util"
 	util_error "backend-template/util/error"
 
 	"github.com/stretchr/testify/assert"
@@ -21,7 +22,11 @@ func TestUserServiceGetUserByEmail(t *testing.T) {
 	defer ctrl.Finish()
 
 	repoMock := mock_repository.NewMockUserRepository(ctrl)
-	service := userService{userRepository: repoMock}
+	jwtMock := mock_util.NewMockJWTManager(ctrl)
+	passwordMock := mock_util.NewMockPasswordManager(ctrl)
+	mailMock := mock_util.NewMockMailManager(ctrl)
+
+	service := NewUserService(repoMock, jwtMock, passwordMock, mailMock)
 
 	emailReq := "test@example.com"
 	userRes := user_model.GetUserResponse{
@@ -49,11 +54,11 @@ func TestUserServiceGetUserByEmail(t *testing.T) {
 		assert.Equal(t, userRes, res)
 	})
 
-	t.Run("should return client error when theres no user equal to email requirment", func(t *testing.T) {
+	t.Run("should return client error when theres no user equal to email requirement", func(t *testing.T) {
 		expectedErr := util_error.NewNotFound(sql.ErrNoRows, fmt.Sprintf("User with the email of %s is not found", emailReq))
 
 		repoMock.EXPECT().GetUserByEmail(gomock.Any(), emailReq).
-			Return(user_model.GetUserResponse{}, expectedErr)
+			Return(user_model.User{}, expectedErr)
 
 		_, err := service.GetUserByEmail(context.Background(), emailReq)
 
@@ -65,7 +70,7 @@ func TestUserServiceGetUserByEmail(t *testing.T) {
 		expectedErr := errors.New("error from db")
 
 		repoMock.EXPECT().GetUserByEmail(gomock.Any(), emailReq).
-			Return(user_model.GetUserResponse{}, expectedErr)
+			Return(user_model.User{}, expectedErr)
 
 		_, err := service.GetUserByEmail(context.Background(), emailReq)
 

@@ -1,9 +1,25 @@
 package user_service
 
-import "context"
+import (
+	util_error "backend-template/util/error"
+	"context"
+	"errors"
+)
 
-// Implements UserService
-// TODO: Comment Here
 func (userService *userService) VerifyUser(ctx context.Context, email string) (err error) {
-	panic("implement me")
+	user, err := userService.userRepository.GetUserByEmail(ctx, email)
+	if err != nil {
+		return err
+	}
+
+	if user.IsVerified {
+		return util_error.NewBadRequest(errors.New("user is already verified"), "User is already verified")
+	}
+
+	err = userService.userRepository.VerifyUser(ctx, email)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

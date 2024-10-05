@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"testing"
+	"time"
 
 	user_model "backend-template/internal/modules/user/model"
 	mock_repository "backend-template/mock/repository"
@@ -23,47 +24,53 @@ func TestUserServiceRegister(t *testing.T) {
 	defer ctrl.Finish()
 
 	repoMock := mock_repository.NewMockUserRepository(ctrl)
-	jwtUtilMock := mock_util.NewMockJWTManager(ctrl)
+	jwtMock := mock_util.NewMockJWTManager(ctrl)
+	passwordMock := mock_util.NewMockPasswordManager(ctrl)
 	mailMock := mock_util.NewMockMailManager(ctrl)
-	service := userService{userRepository: repoMock}
+
+	service := NewUserService(repoMock, jwtMock, passwordMock, mailMock)
 
 	reqEmail := "test@example.com"
 	reqPassword := "password123"
 	reqName := "Test User"
 	reqAddress := "123 Test St"
 
-	resToken := "expected_toked"
+	hashedPassword := "secured_password"
+
 	resID := "1"
+	token := "abcd123"
+	duration := 1 * time.Hour
 
 	t.Run("should register a new user", func(t *testing.T) {
 		repoMock.EXPECT().GetUserByEmail(gomock.Any(), reqEmail).Return(user_model.User{}, sql.ErrNoRows)
 
-		repoMock.EXPECT().CreateUser(gomock.Any(), reqEmail, reqPassword, reqName, reqAddress).
+		passwordMock.EXPECT().PasswordValidation(reqPassword).Return(nil)
+
+		passwordMock.EXPECT().HashPassword(reqPassword).Return(hashedPassword, nil)
+
+		repoMock.EXPECT().CreateUser(gomock.Any(), reqEmail, hashedPassword, reqName, reqAddress).
 			Return(resID, nil)
 
+		jwtMock.EXPECT().GenerateAuthToken(resID, reqName, util_jwt.USER_ROLE, duration).Return(token, nil)
+
+		mailMock.EXPECT().SentVerifyEmail(token, reqEmail).Return(nil)
+
 		id, err := service.Register(context.Background(), reqEmail, reqPassword, reqName, reqAddress)
-
-		jwtUtilMock.EXPECT().
-			GenerateAuthToken(reqEmail, reqName, util_jwt.USER_ROLE, gomock.Any()).
-			Return(resToken, nil)
-
-		mailMock.EXPECT().SentMessage(gomock.Any()).Return(nil)
 
 		require.NoError(t, err)
 		assert.Equal(t, resID, id)
 	})
 
 	t.Run("should return error when failed retrieving from db", func(t *testing.T) {
-		expectedErr := errors.New("registration error")
+		expectedErr := errors.New("db error")
 
-		repoMock.EXPECT().CreateUser(gomock.Any(), reqEmail, reqPassword, reqName, reqAddress).
-			Return("", expectedErr)
+		repoMock.EXPECT().GetUserByEmail(gomock.Any(), reqEmail).Return(user_model.User{}, expectedErr)
 
 		id, err := service.Register(context.Background(), reqEmail, reqPassword, reqName, reqAddress)
 
-		require.Error(t, err)
+		assert.Error(t, err)
 		assert.Empty(t, id)
-		assert.Equal(t, expectedErr, err)
+		assert.EqualError(t, err, expectedErr.Error())
 	})
 
 	t.Run("should return client error when email is already used", func(t *testing.T) {
@@ -83,6 +90,6 @@ func TestUserServiceRegister(t *testing.T) {
 
 		assert.Error(t, err)
 		assert.Empty(t, id)
-		assert.EqualError(t, err, expectedErr.Message)
+		assert.EqualError(t, err, expectedErr.Error())
 	})
 }

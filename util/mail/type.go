@@ -1,7 +1,11 @@
 package util_mail
 
-import "gopkg.in/gomail.v2"
-
 type MailManager interface {
-	SentMessage(msg *gomail.Message) error
+	SentVerifyEmail(token, email string) error
+	SentResetPassword(token, email string) error
+}
+
+type Attachment struct {
+	FileName string
+	FileByte []byte
 }

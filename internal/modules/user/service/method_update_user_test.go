@@ -3,6 +3,7 @@ package user_service
 import (
 	user_model "backend-template/internal/modules/user/model"
 	mock_repository "backend-template/mock/repository"
+	mock_util "backend-template/mock/util"
 	util_error "backend-template/util/error"
 	"context"
 	"errors"
@@ -19,7 +20,11 @@ func TestUserServiceUpdateUser(t *testing.T) {
 	defer ctrl.Finish()
 
 	repoMock := mock_repository.NewMockUserRepository(ctrl)
-	service := userService{userRepository: repoMock}
+	jwtMock := mock_util.NewMockJWTManager(ctrl)
+	passwordMock := mock_util.NewMockPasswordManager(ctrl)
+	mailMock := mock_util.NewMockMailManager(ctrl)
+
+	service := NewUserService(repoMock, jwtMock, passwordMock, mailMock)
 
 	id := "1"
 	name := "John Doe"
@@ -46,9 +51,9 @@ func TestUserServiceUpdateUser(t *testing.T) {
 	t.Run("should return error when update user fails", func(t *testing.T) {
 		expectedErr := errors.New("failed to update user")
 
-		repoMock.EXPECT().UpdateUser(gomock.Any(), id, name, address).Return(expectedErr)
+		repoMock.EXPECT().GetUserByID(gomock.Any(), "").Return(user_model.User{}, expectedErr)
 
-		err := service.UpdateUser(context.Background(), id, name, address)
+		err := service.UpdateUser(context.Background(), "", "", "")
 
 		require.Error(t, err)
 		assert.EqualError(t, err, expectedErr.Error())

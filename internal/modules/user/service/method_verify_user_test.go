@@ -3,6 +3,7 @@ package user_service
 import (
 	user_model "backend-template/internal/modules/user/model"
 	mock_repository "backend-template/mock/repository"
+	mock_util "backend-template/mock/util"
 	util_error "backend-template/util/error"
 	"context"
 	"errors"
@@ -18,7 +19,11 @@ func TestUserServiceVerifyUser(t *testing.T) {
 	defer ctrl.Finish()
 
 	repoMock := mock_repository.NewMockUserRepository(ctrl)
-	service := userService{userRepository: repoMock}
+	jwtMock := mock_util.NewMockJWTManager(ctrl)
+	passwordMock := mock_util.NewMockPasswordManager(ctrl)
+	mailMock := mock_util.NewMockMailManager(ctrl)
+
+	service := NewUserService(repoMock, jwtMock, passwordMock, mailMock)
 
 	email := "test@example.com"
 
@@ -28,7 +33,7 @@ func TestUserServiceVerifyUser(t *testing.T) {
 		Password:   "secure_password",
 		Name:       "Joe",
 		Address:    "Sesame Street",
-		IsVerified: true,
+		IsVerified: false,
 	}
 
 	t.Run("should verify user successfully", func(t *testing.T) {
@@ -46,8 +51,8 @@ func TestUserServiceVerifyUser(t *testing.T) {
 	t.Run("should return error when failed retrieving from db", func(t *testing.T) {
 		expectedErr := errors.New("failed to verify user")
 
-		repoMock.EXPECT().VerifyUser(gomock.Any(), email).
-			Return(expectedErr)
+		repoMock.EXPECT().GetUserByEmail(gomock.Any(), email).
+			Return(user_model.User{}, expectedErr)
 
 		err := service.VerifyUser(context.Background(), email)
 
@@ -56,16 +61,15 @@ func TestUserServiceVerifyUser(t *testing.T) {
 	})
 
 	t.Run("should return error when user is already verified", func(t *testing.T) {
+		repoRes.IsVerified = true
 		expectedErr := util_error.NewBadRequest(errors.New("user is already verified"), "User is already verified")
 
 		repoMock.EXPECT().GetUserByEmail(gomock.Any(), email).
 			Return(repoRes, nil)
 
-		repoMock.EXPECT().VerifyUser(gomock.Any(), email).Return(user_model.User{}, expectedErr)
-
 		err := service.VerifyUser(context.Background(), email)
 
 		require.Error(t, err)
-		assert.Equal(t, expectedErr, err)
+		assert.EqualError(t, err, expectedErr.Error())
 	})
 }

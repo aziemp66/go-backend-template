@@ -9,6 +9,7 @@ import (
 
 	user_model "backend-template/internal/modules/user/model"
 	mock_repository "backend-template/mock/repository"
+	mock_util "backend-template/mock/util"
 	util_error "backend-template/util/error"
 
 	"github.com/stretchr/testify/assert"
@@ -21,9 +22,11 @@ func TestUserServiceGetUserByID(t *testing.T) {
 	defer ctrl.Finish()
 
 	repoMock := mock_repository.NewMockUserRepository(ctrl)
-	service := userService{
-		userRepository: repoMock,
-	}
+	jwtMock := mock_util.NewMockJWTManager(ctrl)
+	passwordMock := mock_util.NewMockPasswordManager(ctrl)
+	mailMock := mock_util.NewMockMailManager(ctrl)
+
+	service := NewUserService(repoMock, jwtMock, passwordMock, mailMock)
 
 	idReq := "123"
 
@@ -57,7 +60,7 @@ func TestUserServiceGetUserByID(t *testing.T) {
 		expectedErr := util_error.NewNotFound(sql.ErrNoRows, fmt.Sprintf("User with the id of %s is not found", idReq))
 
 		repoMock.EXPECT().GetUserByID(gomock.Any(), idReq).
-			Return(user_model.GetUserResponse{}, expectedErr)
+			Return(user_model.User{}, expectedErr)
 
 		_, err := service.GetUserByID(context.Background(), idReq)
 

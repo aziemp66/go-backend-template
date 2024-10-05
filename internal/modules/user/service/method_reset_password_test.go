@@ -20,52 +20,57 @@ func TestUserServiceResetPassword(t *testing.T) {
 	defer ctrl.Finish()
 
 	repoMock := mock_repository.NewMockUserRepository(ctrl)
-	jwtUtilMock := mock_util.NewMockJWTManager(ctrl)
-	service := userService{userRepository: repoMock}
+	jwtMock := mock_util.NewMockJWTManager(ctrl)
+	passwordMock := mock_util.NewMockPasswordManager(ctrl)
+	mailMock := mock_util.NewMockMailManager(ctrl)
+
+	service := NewUserService(repoMock, jwtMock, passwordMock, mailMock)
 
 	token := "some-reset-token"
-	email := "test@example.com"
-	newPassword := "new_secure_password123"
+	newPassword := "new_password123"
 
 	expectedUser := user_model.User{
 		ID:       "123",
-		Email:    email,
+		Email:    "john@example.com",
 		Password: "old_password",
 		Name:     "John",
 		Address:  "Sesame Street",
 	}
-	expClaims := util_jwt.AuthClaims{
+	expClaims := &util_jwt.AuthClaims{
 		ID:   expectedUser.ID,
 		Name: expectedUser.Name,
 		Role: util_jwt.USER_ROLE,
 	}
 
 	t.Run("should reset password successfully", func(t *testing.T) {
-		// repoMock.EXPECT().ResetPassword(gomock.Any(), token, email, newPassword).
-		// 	Return(nil)
+		securedPassword := "secured_password"
 
-		jwtUtilMock.EXPECT().VerifyAuthToken(token).
+		jwtMock.EXPECT().VerifyAuthToken(token).
 			Return(expClaims, nil)
 
 		repoMock.EXPECT().GetUserByID(gomock.Any(), expClaims.ID).
 			Return(expectedUser, nil)
 
-		repoMock.EXPECT().ChangePassword(gomock.Any(), email, newPassword)
+		passwordMock.EXPECT().PasswordValidation(newPassword).Return(nil)
 
-		err := service.ResetPassword(context.Background(), token, email, newPassword)
+		passwordMock.EXPECT().HashPassword(newPassword).Return(securedPassword, nil)
+
+		repoMock.EXPECT().ChangePassword(gomock.Any(), expectedUser.Email, securedPassword).Return(nil)
+
+		err := service.ResetPassword(context.Background(), token, newPassword)
 
 		require.NoError(t, err)
-		assert.Nil(t, err)
 	})
 
 	t.Run("should return error when failed retrieving from db", func(t *testing.T) {
 		expectedErr := errors.New("failed to reset password")
 
-		repoMock.EXPECT().ChangePassword(gomock.Any(), email, newPassword).Return(expectedErr)
+		jwtMock.EXPECT().VerifyAuthToken(gomock.Any()).Return(&util_jwt.AuthClaims{}, nil)
 
-		err := service.ResetPassword(context.Background(), token, email, newPassword)
+		repoMock.EXPECT().GetUserByID(gomock.Any(), "").Return(user_model.User{}, expectedErr)
 
-		require.Error(t, err)
-		assert.Equal(t, expectedErr, err)
+		err := service.ResetPassword(context.Background(), "", "")
+
+		assert.EqualError(t, err, expectedErr.Error())
 	})
 }
