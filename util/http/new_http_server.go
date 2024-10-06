@@ -34,5 +34,7 @@ func NewHTTPServer(ginMode string) *gin.Engine {
 
 	router := gin.New()
 
+	router.Use(gin.Recovery())
+
 	return router
 }

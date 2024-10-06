@@ -27,10 +27,14 @@ type ForgotPasswordRequest struct {
 	Email string `json:"email" binding:"required,email"`
 }
 
-type GetUserRequest struct {
+type GetUserIDRequest struct {
 	ID string `uri:"id" binding:"required,uuid"`
 }
 
-type ResetPasswordRequest struct {
+type GetUserEmailRequest struct {
+	Email string `uri:"email" binding:"required,email"`
+}
+
+type TokenRequest struct {
 	Token string `uri:"token" binding:"required"`
 }

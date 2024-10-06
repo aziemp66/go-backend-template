@@ -6,3 +6,7 @@ type GetUserResponse struct {
 	Address string `json:"address"`
 	Email   string `json:"email"`
 }
+
+type IDResponse struct {
+	ID string `json:"id"`
+}

@@ -9,12 +9,12 @@ import (
 
 func ErrorHandlerMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.Writer.Header().Add("Content-Type", "application/json")
 		c.Next()
 
 		if len(c.Errors) < 1 {
 			return
 		}
+		c.Writer.Header().Add("Content-Type", "application/json")
 
 		err := c.Errors[0]
 		// if err can be casted to ClientError, then it is a client error
