@@ -7,6 +7,10 @@ type GetUserResponse struct {
 	Email   string `json:"email"`
 }
 
+type LoginUserResponse struct {
+	Token string `json:"token"`
+}
+
 type IDResponse struct {
 	ID string `json:"id"`
 }

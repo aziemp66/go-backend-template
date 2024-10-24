@@ -41,17 +41,17 @@ func (m *MockUserService) EXPECT() *MockUserServiceMockRecorder {
 }
 
 // ChangePassword mocks base method.
-func (m *MockUserService) ChangePassword(ctx context.Context, email, oldPassword, newPassword string) error {
+func (m *MockUserService) ChangePassword(ctx context.Context, id, oldPassword, newPassword string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ChangePassword", ctx, email, oldPassword, newPassword)
+	ret := m.ctrl.Call(m, "ChangePassword", ctx, id, oldPassword, newPassword)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // ChangePassword indicates an expected call of ChangePassword.
-func (mr *MockUserServiceMockRecorder) ChangePassword(ctx, email, oldPassword, newPassword any) *MockUserServiceChangePasswordCall {
+func (mr *MockUserServiceMockRecorder) ChangePassword(ctx, id, oldPassword, newPassword any) *MockUserServiceChangePasswordCall {
 	mr.mock.ctrl.T.Helper()
-	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ChangePassword", reflect.TypeOf((*MockUserService)(nil).ChangePassword), ctx, email, oldPassword, newPassword)
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ChangePassword", reflect.TypeOf((*MockUserService)(nil).ChangePassword), ctx, id, oldPassword, newPassword)
 	return &MockUserServiceChangePasswordCall{Call: call}
 }
 
@@ -349,17 +349,17 @@ func (c *MockUserServiceUpdateUserCall) DoAndReturn(f func(context.Context, stri
 }
 
 // VerifyUser mocks base method.
-func (m *MockUserService) VerifyUser(ctx context.Context, email string) error {
+func (m *MockUserService) VerifyUser(ctx context.Context, id string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "VerifyUser", ctx, email)
+	ret := m.ctrl.Call(m, "VerifyUser", ctx, id)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // VerifyUser indicates an expected call of VerifyUser.
-func (mr *MockUserServiceMockRecorder) VerifyUser(ctx, email any) *MockUserServiceVerifyUserCall {
+func (mr *MockUserServiceMockRecorder) VerifyUser(ctx, id any) *MockUserServiceVerifyUserCall {
 	mr.mock.ctrl.T.Helper()
-	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VerifyUser", reflect.TypeOf((*MockUserService)(nil).VerifyUser), ctx, email)
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VerifyUser", reflect.TypeOf((*MockUserService)(nil).VerifyUser), ctx, id)
 	return &MockUserServiceVerifyUserCall{Call: call}
 }
 

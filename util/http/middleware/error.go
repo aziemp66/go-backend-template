@@ -1,6 +1,8 @@
 package util_http_middleware
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 
 	util_error "backend-template/util/error"
@@ -19,9 +21,7 @@ func ErrorHandlerMiddleware() gin.HandlerFunc {
 		err := c.Errors[0]
 		// if err can be casted to ClientError, then it is a client error
 		if clientError, ok := err.Err.(*util_error.ClientError); ok {
-			c.JSON(clientError.Code, util_http.Error{
-				Message: clientError.Message,
-			})
+			util_http.SendErrorResponseJson(c, clientError.Message, clientError.Code)
 			return
 		}
 
@@ -29,18 +29,15 @@ func ErrorHandlerMiddleware() gin.HandlerFunc {
 			c.JSON(400, util_http.Error{
 				Message: err.Err.Error(),
 			})
+			util_http.SendErrorResponseJson(c, err.Err.Error(), http.StatusBadRequest)
 			return
 		}
 
 		if err.IsType(gin.ErrorTypePrivate) {
-			c.JSON(500, util_http.Error{
-				Message: "Internal server error",
-			})
+			util_http.SendErrorResponseJson(c, "Internal Server Error", http.StatusInternalServerError)
 			return
 		}
 
-		c.JSON(500, util_http.Error{
-			Message: "Internal server error",
-		})
+		util_http.SendErrorResponseJson(c, "Internal Server Error", http.StatusInternalServerError)
 	}
 }

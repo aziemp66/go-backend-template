@@ -10,7 +10,6 @@
 package mock_util
 
 import (
-	util_error "backend-template/util/error"
 	reflect "reflect"
 
 	gomock "go.uber.org/mock/gomock"
@@ -40,10 +39,10 @@ func (m *MockPasswordManager) EXPECT() *MockPasswordManagerMockRecorder {
 }
 
 // CheckPasswordHash mocks base method.
-func (m *MockPasswordManager) CheckPasswordHash(password, hash string) *util_error.ClientError {
+func (m *MockPasswordManager) CheckPasswordHash(password, hash string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CheckPasswordHash", password, hash)
-	ret0, _ := ret[0].(*util_error.ClientError)
+	ret0, _ := ret[0].(error)
 	return ret0
 }
 
@@ -60,19 +59,19 @@ type MockPasswordManagerCheckPasswordHashCall struct {
 }
 
 // Return rewrite *gomock.Call.Return
-func (c *MockPasswordManagerCheckPasswordHashCall) Return(arg0 *util_error.ClientError) *MockPasswordManagerCheckPasswordHashCall {
+func (c *MockPasswordManagerCheckPasswordHashCall) Return(arg0 error) *MockPasswordManagerCheckPasswordHashCall {
 	c.Call = c.Call.Return(arg0)
 	return c
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *MockPasswordManagerCheckPasswordHashCall) Do(f func(string, string) *util_error.ClientError) *MockPasswordManagerCheckPasswordHashCall {
+func (c *MockPasswordManagerCheckPasswordHashCall) Do(f func(string, string) error) *MockPasswordManagerCheckPasswordHashCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockPasswordManagerCheckPasswordHashCall) DoAndReturn(f func(string, string) *util_error.ClientError) *MockPasswordManagerCheckPasswordHashCall {
+func (c *MockPasswordManagerCheckPasswordHashCall) DoAndReturn(f func(string, string) error) *MockPasswordManagerCheckPasswordHashCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }
@@ -117,10 +116,10 @@ func (c *MockPasswordManagerHashPasswordCall) DoAndReturn(f func(string) (string
 }
 
 // PasswordValidation mocks base method.
-func (m *MockPasswordManager) PasswordValidation(password string) *util_error.ClientError {
+func (m *MockPasswordManager) PasswordValidation(password string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "PasswordValidation", password)
-	ret0, _ := ret[0].(*util_error.ClientError)
+	ret0, _ := ret[0].(error)
 	return ret0
 }
 
@@ -137,19 +136,19 @@ type MockPasswordManagerPasswordValidationCall struct {
 }
 
 // Return rewrite *gomock.Call.Return
-func (c *MockPasswordManagerPasswordValidationCall) Return(arg0 *util_error.ClientError) *MockPasswordManagerPasswordValidationCall {
+func (c *MockPasswordManagerPasswordValidationCall) Return(arg0 error) *MockPasswordManagerPasswordValidationCall {
 	c.Call = c.Call.Return(arg0)
 	return c
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *MockPasswordManagerPasswordValidationCall) Do(f func(string) *util_error.ClientError) *MockPasswordManagerPasswordValidationCall {
+func (c *MockPasswordManagerPasswordValidationCall) Do(f func(string) error) *MockPasswordManagerPasswordValidationCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockPasswordManagerPasswordValidationCall) DoAndReturn(f func(string) *util_error.ClientError) *MockPasswordManagerPasswordValidationCall {
+func (c *MockPasswordManagerPasswordValidationCall) DoAndReturn(f func(string) error) *MockPasswordManagerPasswordValidationCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

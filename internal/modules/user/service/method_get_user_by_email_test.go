@@ -58,7 +58,7 @@ func TestUserServiceGetUserByEmail(t *testing.T) {
 		expectedErr := util_error.NewNotFound(sql.ErrNoRows, fmt.Sprintf("User with the email of %s is not found", emailReq))
 
 		repoMock.EXPECT().GetUserByEmail(gomock.Any(), emailReq).
-			Return(user_model.User{}, expectedErr)
+			Return(user_model.User{}, sql.ErrNoRows)
 
 		_, err := service.GetUserByEmail(context.Background(), emailReq)
 

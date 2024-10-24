@@ -24,7 +24,7 @@ func (p *passwordManager) HashPassword(password string) (string, error) {
 	return string(bytes), err
 }
 
-func (p *passwordManager) CheckPasswordHash(password, hash string) *util_error.ClientError {
+func (p *passwordManager) CheckPasswordHash(password, hash string) error {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	if err != nil {
 		return util_error.NewUnauthorized(err, "Wrong email or password")
@@ -32,7 +32,7 @@ func (p *passwordManager) CheckPasswordHash(password, hash string) *util_error.C
 	return nil
 }
 
-func (p *passwordManager) PasswordValidation(password string) *util_error.ClientError {
+func (p *passwordManager) PasswordValidation(password string) error {
 	// Minimum 8 characters, at least one uppercase letter, one lowercase letter,
 	// one digit, and one special character
 	lowerCase := regexp.MustCompile(`[a-z]`).MatchString(password)

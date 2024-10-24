@@ -6,8 +6,8 @@ import (
 	"errors"
 )
 
-func (userService *userService) VerifyUser(ctx context.Context, email string) (err error) {
-	user, err := userService.userRepository.GetUserByEmail(ctx, email)
+func (userService *userService) VerifyUser(ctx context.Context, id string) (err error) {
+	user, err := userService.userRepository.GetUserByID(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -16,7 +16,7 @@ func (userService *userService) VerifyUser(ctx context.Context, email string) (e
 		return util_error.NewBadRequest(errors.New("user is already verified"), "User is already verified")
 	}
 
-	err = userService.userRepository.VerifyUser(ctx, email)
+	err = userService.userRepository.VerifyUser(ctx, id)
 	if err != nil {
 		return err
 	}

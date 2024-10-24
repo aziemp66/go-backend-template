@@ -14,13 +14,13 @@ const (
 	UPDATE user set name = $2, address = $3 WHERE user = $1
 	`
 	changePasswordQuery = `
-	UPDATE user set password = $2 WHERE email = $1
+	UPDATE user set password = $2 WHERE id = $1
 	`
 	deleteUserQuery = `
 	DELETE FROM user WHERE id = $1
 	`
 
 	verifyUserQuery = `
-	UPDATE user set is_verified = true WHERE email = $1
+	UPDATE user set is_verified = true WHERE id = $1
 	`
 )

@@ -25,11 +25,11 @@ func TestUserServiceVerifyUser(t *testing.T) {
 
 	service := NewUserService(repoMock, jwtMock, passwordMock, mailMock)
 
-	email := "test@example.com"
+	userID := "123"
 
 	repoRes := user_model.User{
-		ID:         "123",
-		Email:      email,
+		ID:         userID,
+		Email:      "john@gmail.com",
 		Password:   "secure_password",
 		Name:       "Joe",
 		Address:    "Sesame Street",
@@ -37,12 +37,12 @@ func TestUserServiceVerifyUser(t *testing.T) {
 	}
 
 	t.Run("should verify user successfully", func(t *testing.T) {
-		repoMock.EXPECT().GetUserByEmail(gomock.Any(), email).Return(repoRes, nil)
+		repoMock.EXPECT().GetUserByID(gomock.Any(), userID).Return(repoRes, nil)
 
-		repoMock.EXPECT().VerifyUser(gomock.Any(), email).
+		repoMock.EXPECT().VerifyUser(gomock.Any(), userID).
 			Return(nil)
 
-		err := service.VerifyUser(context.Background(), email)
+		err := service.VerifyUser(context.Background(), userID)
 
 		require.NoError(t, err)
 		assert.Nil(t, err)
@@ -51,10 +51,10 @@ func TestUserServiceVerifyUser(t *testing.T) {
 	t.Run("should return error when failed retrieving from db", func(t *testing.T) {
 		expectedErr := errors.New("failed to verify user")
 
-		repoMock.EXPECT().GetUserByEmail(gomock.Any(), email).
+		repoMock.EXPECT().GetUserByID(gomock.Any(), userID).
 			Return(user_model.User{}, expectedErr)
 
-		err := service.VerifyUser(context.Background(), email)
+		err := service.VerifyUser(context.Background(), userID)
 
 		require.Error(t, err)
 		assert.Equal(t, expectedErr, err)
@@ -64,10 +64,10 @@ func TestUserServiceVerifyUser(t *testing.T) {
 		repoRes.IsVerified = true
 		expectedErr := util_error.NewBadRequest(errors.New("user is already verified"), "User is already verified")
 
-		repoMock.EXPECT().GetUserByEmail(gomock.Any(), email).
+		repoMock.EXPECT().GetUserByID(gomock.Any(), userID).
 			Return(repoRes, nil)
 
-		err := service.VerifyUser(context.Background(), email)
+		err := service.VerifyUser(context.Background(), userID)
 
 		require.Error(t, err)
 		assert.EqualError(t, err, expectedErr.Error())

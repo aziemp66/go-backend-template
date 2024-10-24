@@ -2,8 +2,8 @@ package user_service
 
 import "context"
 
-func (userService *userService) ChangePassword(ctx context.Context, email, oldPassword, newPassword string) (err error) {
-	user, err := userService.userRepository.GetUserByEmail(ctx, email)
+func (userService *userService) ChangePassword(ctx context.Context, id, oldPassword, newPassword string) (err error) {
+	user, err := userService.userRepository.GetUserByID(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -21,7 +21,7 @@ func (userService *userService) ChangePassword(ctx context.Context, email, oldPa
 		return err
 	}
 
-	err = userService.userRepository.ChangePassword(ctx, email, hashedPassword)
+	err = userService.userRepository.ChangePassword(ctx, id, hashedPassword)
 	if err != nil {
 		return err
 	}

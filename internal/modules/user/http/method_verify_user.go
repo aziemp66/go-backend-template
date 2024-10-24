@@ -1,9 +1,25 @@
 package user_http
 
-import "github.com/gin-gonic/gin"
+import (
+	user_model "backend-template/internal/modules/user/model"
+	util_error "backend-template/util/error"
+	util_http "backend-template/util/http"
 
-// Implements UserHttpHandler
-// TODO: Comment Here
+	"github.com/gin-gonic/gin"
+)
+
 func (userHttpHandler *userHttpHandler) VerifyUser(ctx *gin.Context) {
-	// Put code here
+	var req user_model.TokenRequest
+	if err := ctx.ShouldBindUri(&req); err != nil {
+		ctx.Error(util_error.NewBadRequest(err, err.Error()))
+		return
+	}
+
+	err := userHttpHandler.userService.VerifyUser(ctx, req.Token)
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+
+	util_http.SendResponseJson(ctx, "Successfully Verifiy User", nil)
 }

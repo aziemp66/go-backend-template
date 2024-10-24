@@ -2,6 +2,7 @@ package util_http_middleware
 
 import (
 	util_error "backend-template/util/error"
+	util_http "backend-template/util/http"
 	util_jwt "backend-template/util/jwt"
 	"errors"
 
@@ -14,7 +15,7 @@ const (
 
 func JWTAuthentication(jwtManager util_jwt.JWTManager) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		authHeader := c.GetHeader("X-Authorization")
+		authHeader := c.GetHeader(util_http.HEADER_AUTH)
 		if authHeader == "" {
 			c.Error(
 				util_error.NewForbidden(errors.New("authentication header is empty"), "you are not authenticated to access this route"),
@@ -31,12 +32,11 @@ func JWTAuthentication(jwtManager util_jwt.JWTManager) gin.HandlerFunc {
 		claims, err := jwtManager.VerifyAuthToken(tokenString)
 		if err != nil {
 			c.Error(err)
-			c.Abort()
 			return
 		}
 
 		c.Set("user_id", claims.ID)
-		c.Set("user_role", claims.Role)
+		c.Set("user_role", string(claims.Role))
 		c.Next()
 	}
 }

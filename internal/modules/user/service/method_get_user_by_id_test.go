@@ -60,7 +60,7 @@ func TestUserServiceGetUserByID(t *testing.T) {
 		expectedErr := util_error.NewNotFound(sql.ErrNoRows, fmt.Sprintf("User with the id of %s is not found", idReq))
 
 		repoMock.EXPECT().GetUserByID(gomock.Any(), idReq).
-			Return(user_model.User{}, expectedErr)
+			Return(user_model.User{}, sql.ErrNoRows)
 
 		_, err := service.GetUserByID(context.Background(), idReq)
 

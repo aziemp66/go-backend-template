@@ -19,7 +19,7 @@ func TestUserRepositoryChangePassword(t *testing.T) {
 
 	repoMock := NewUserRepositoryPostgres(sqlx.NewDb(db, "sqlmock"))
 
-	reqEmail := "azieganteng007@gmail.com"
+	reqID := "123"
 	reqHashed := "hashedPassword"
 	if err != nil {
 		panic(err)
@@ -27,10 +27,10 @@ func TestUserRepositoryChangePassword(t *testing.T) {
 
 	t.Run("should run execute update query", func(t *testing.T) {
 		sqlMock.ExpectExec(changePasswordQuery).
-			WithArgs(reqEmail, reqHashed).
+			WithArgs(reqID, reqHashed).
 			WillReturnResult(sqlmock.NewResult(0, 1))
 
-		err = repoMock.ChangePassword(context.Background(), reqEmail, reqHashed)
+		err = repoMock.ChangePassword(context.Background(), reqID, reqHashed)
 		assert.Nil(t, err)
 	})
 

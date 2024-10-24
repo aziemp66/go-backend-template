@@ -32,7 +32,7 @@ type UserService interface {
 
 	// ChangePassword allows a user to change their password by providing the old password and a new one.
 	// Returns an error if the password change process fails (e.g., incorrect old password).
-	ChangePassword(ctx context.Context, email, oldPassword, newPassword string) error
+	ChangePassword(ctx context.Context, id, oldPassword, newPassword string) error
 
 	// ForgotPassword initiates the forgot password process, typically sending a password reset link to the user's email.
 	// Returns an error if the operation fails (e.g., email not found).
@@ -44,5 +44,5 @@ type UserService interface {
 
 	// VerifyUser marks a user's email as verified, typically after they have confirmed their email address.
 	// Returns an error if the verification process fails.
-	VerifyUser(ctx context.Context, email string) (err error)
+	VerifyUser(ctx context.Context, id string) (err error)
 }

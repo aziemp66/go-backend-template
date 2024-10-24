@@ -24,7 +24,7 @@ type UserRepository interface {
 
 	// ChangePassword updates a user's password in the repository.
 	// Takes the user's email and the new hashed password, returning an error if the update fails.
-	ChangePassword(ctx context.Context, email, hashedPassword string) (err error)
+	ChangePassword(ctx context.Context, id, hashedPassword string) (err error)
 
 	// UpdateUser updates the user's name and address information.
 	// Takes the user's ID and the updated name and address values. Returns an error if the update fails.
@@ -36,5 +36,5 @@ type UserRepository interface {
 
 	// VerifyUser marks a user as verified based on their email address.
 	// Typically used after a successful email verification process.
-	VerifyUser(ctx context.Context, email string) (err error)
+	VerifyUser(ctx context.Context, id string) (err error)
 }

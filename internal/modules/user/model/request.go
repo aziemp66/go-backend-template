@@ -18,9 +18,12 @@ type LoginUserRequest struct {
 }
 
 type ChangePasswordRequest struct {
-	Email       string `json:"email" binding:"required,email"`
 	OldPassword string `json:"old_password" binding:"required,gte=6,lte=72"`
 	NewPassword string `json:"new_password" binding:"required,gte=6,lte=72"`
+}
+
+type ResetPasswordRequest struct {
+	Password string `json:"password" binding:"required,gte=6,lte=72"`
 }
 
 type ForgotPasswordRequest struct {

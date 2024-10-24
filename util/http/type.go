@@ -16,4 +16,6 @@ type (
 	}
 
 	TraceType string
+
+	Header string
 )

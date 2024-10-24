@@ -19,14 +19,14 @@ func TestUserRepositoryVerifyUser(t *testing.T) {
 
 	repoMock := NewUserRepositoryPostgres(sqlx.NewDb(db, "sqlmock"))
 
-	reqEmail := "johndoe@gmail.com"
+	reqID := "123"
 
 	t.Run("should verify user successfully", func(t *testing.T) {
 		sqlMock.ExpectExec(verifyUserQuery).
-			WithArgs(reqEmail).
+			WithArgs(reqID).
 			WillReturnResult(sqlmock.NewResult(0, 1))
 
-		err := repoMock.VerifyUser(context.Background(), reqEmail)
+		err := repoMock.VerifyUser(context.Background(), reqID)
 		assert.Nil(t, err)
 	})
 
