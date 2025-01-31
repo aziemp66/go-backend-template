@@ -28,12 +28,11 @@ func TestUserServiceChangePassword(t *testing.T) {
 
 	t.Run("should successfully change password", func(t *testing.T) {
 		repoRes := user_model.User{
-			ID:         id,
-			Email:      "john@google.com",
-			Password:   "hashed_old_password",
-			Name:       "John",
-			Address:    "Sesame Street",
-			IsVerified: true,
+			ID:       id,
+			Email:    "john@google.com",
+			Password: "hashed_old_password",
+			Name:     "John",
+			Address:  "Sesame Street",
 		}
 		hashedPassword := "hashed_new_password"
 

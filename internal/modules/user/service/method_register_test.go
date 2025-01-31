@@ -72,12 +72,11 @@ func TestUserServiceRegister(t *testing.T) {
 
 	t.Run("should return client error when email is already used", func(t *testing.T) {
 		repoRes := user_model.User{
-			ID:         resID,
-			Email:      reqEmail,
-			Password:   reqPassword,
-			Name:       reqName,
-			Address:    reqAddress,
-			IsVerified: true,
+			ID:       resID,
+			Email:    reqEmail,
+			Password: reqPassword,
+			Name:     reqName,
+			Address:  reqAddress,
 		}
 		repoMock.EXPECT().GetUserByEmail(gomock.Any(), reqEmail).Return(repoRes, nil)
 

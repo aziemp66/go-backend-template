@@ -38,12 +38,11 @@ func TestUserServiceGetUserByID(t *testing.T) {
 
 	t.Run("should get user by id", func(t *testing.T) {
 		repoRes := user_model.User{
-			ID:         idReq,
-			Email:      userRes.Email,
-			Password:   "secured_password",
-			Name:       userRes.Name,
-			Address:    userRes.Address,
-			IsVerified: true,
+			ID:       idReq,
+			Email:    userRes.Email,
+			Password: "secured_password",
+			Name:     userRes.Name,
+			Address:  userRes.Address,
 		}
 
 		repoMock.EXPECT().GetUserByID(gomock.Any(), idReq).

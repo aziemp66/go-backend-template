@@ -37,12 +37,11 @@ func TestUserServiceGetUserByEmail(t *testing.T) {
 
 	t.Run("should get user by email", func(t *testing.T) {
 		repoRes := user_model.User{
-			ID:         userRes.ID,
-			Email:      emailReq,
-			Password:   "secured_password",
-			Name:       userRes.Name,
-			Address:    userRes.Address,
-			IsVerified: true,
+			ID:       userRes.ID,
+			Email:    emailReq,
+			Password: "secured_password",
+			Name:     userRes.Name,
+			Address:  userRes.Address,
 		}
 		repoMock.EXPECT().GetUserByEmail(gomock.Any(), emailReq).
 			Return(repoRes, nil)

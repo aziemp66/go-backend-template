@@ -31,12 +31,11 @@ func TestUserServiceLogin(t *testing.T) {
 	reqPassword := "password123"
 
 	repoRes := user_model.User{
-		ID:         "123",
-		Email:      reqEmail,
-		Password:   "secure_password",
-		Name:       "John Doe",
-		Address:    "Sesame Street",
-		IsVerified: true,
+		ID:       "123",
+		Email:    reqEmail,
+		Password: "secure_password",
+		Name:     "John Doe",
+		Address:  "Sesame Street",
 	}
 
 	t.Run("should login user successfully", func(t *testing.T) {
