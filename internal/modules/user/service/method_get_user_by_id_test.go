@@ -24,9 +24,8 @@ func TestUserServiceGetUserByID(t *testing.T) {
 	repoMock := mock_repository.NewMockUserRepository(ctrl)
 	jwtMock := mock_util.NewMockJWTManager(ctrl)
 	passwordMock := mock_util.NewMockPasswordManager(ctrl)
-	mailMock := mock_util.NewMockMailManager(ctrl)
 
-	service := NewUserService(repoMock, jwtMock, passwordMock, mailMock)
+	service := NewUserService(repoMock, jwtMock, passwordMock)
 
 	idReq := "123"
 

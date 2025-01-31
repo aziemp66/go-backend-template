@@ -26,9 +26,8 @@ func TestUserServiceRegister(t *testing.T) {
 	repoMock := mock_repository.NewMockUserRepository(ctrl)
 	jwtMock := mock_util.NewMockJWTManager(ctrl)
 	passwordMock := mock_util.NewMockPasswordManager(ctrl)
-	mailMock := mock_util.NewMockMailManager(ctrl)
 
-	service := NewUserService(repoMock, jwtMock, passwordMock, mailMock)
+	service := NewUserService(repoMock, jwtMock, passwordMock)
 
 	reqEmail := "test@example.com"
 	reqPassword := "password123"
@@ -52,8 +51,6 @@ func TestUserServiceRegister(t *testing.T) {
 			Return(resID, nil)
 
 		jwtMock.EXPECT().GenerateAuthToken(resID, reqName, util_jwt.USER_ROLE, duration).Return(token, nil)
-
-		mailMock.EXPECT().SentVerifyEmail(token, reqEmail).Return(nil)
 
 		id, err := service.Register(context.Background(), reqEmail, reqPassword, reqName, reqAddress)
 

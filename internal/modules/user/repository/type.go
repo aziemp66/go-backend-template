@@ -33,8 +33,4 @@ type UserRepository interface {
 	// DeleteUser removes a user from the repository by their ID.
 	// Returns an error if the deletion operation fails.
 	DeleteUser(ctx context.Context, id string) (err error)
-
-	// VerifyUser marks a user as verified based on their email address.
-	// Typically used after a successful email verification process.
-	VerifyUser(ctx context.Context, id string) (err error)
 }

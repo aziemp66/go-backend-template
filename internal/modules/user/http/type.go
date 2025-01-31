@@ -14,11 +14,8 @@ type userHttpHandler struct {
 
 type UserHttpHandler interface {
 	ChangePassword(ctx *gin.Context)
-	ForgotPassword(ctx *gin.Context)
 	GetUserByID(ctx *gin.Context)
 	Login(ctx *gin.Context)
 	Register(ctx *gin.Context)
-	ResetPassword(ctx *gin.Context)
 	UpdateProfile(ctx *gin.Context)
-	VerifyUser(ctx *gin.Context)
 }

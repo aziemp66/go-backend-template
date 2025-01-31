@@ -13,9 +13,6 @@ func BindUserHttpRouter(router *gin.RouterGroup, handler user_http.UserHttpHandl
 
 	router.POST("/register", handler.Register)
 	router.POST("/login", handler.Login)
-	router.POST("/forgot-password", handler.ForgotPassword)
-	router.POST("/reset-password/:token", handler.ResetPassword)
-	router.POST("/verify/:token", handler.VerifyUser)
 
 	userRoutes := router.Group(
 		"/user",

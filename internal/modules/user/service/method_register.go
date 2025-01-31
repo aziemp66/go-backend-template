@@ -2,11 +2,9 @@ package user_service
 
 import (
 	util_error "backend-template/util/error"
-	util_jwt "backend-template/util/jwt"
 	"context"
 	"database/sql"
 	"fmt"
-	"time"
 )
 
 func (userService *userService) Register(ctx context.Context, email string, password string, name string, address string) (id string, err error) {
@@ -27,16 +25,6 @@ func (userService *userService) Register(ctx context.Context, email string, pass
 	}
 
 	id, err = userService.userRepository.CreateUser(ctx, email, hashedPassword, name, address)
-	if err != nil {
-		return "", err
-	}
-
-	token, err := userService.jwtManager.GenerateAuthToken(id, name, util_jwt.USER_ROLE, 1*time.Hour)
-	if err != nil {
-		return "", err
-	}
-
-	err = userService.mailManager.SentVerifyEmail(token, email)
 	if err != nil {
 		return "", err
 	}

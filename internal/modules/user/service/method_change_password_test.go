@@ -19,9 +19,8 @@ func TestUserServiceChangePassword(t *testing.T) {
 	repoMock := mock_repository.NewMockUserRepository(ctrl)
 	jwtMock := mock_util.NewMockJWTManager(ctrl)
 	passwordMock := mock_util.NewMockPasswordManager(ctrl)
-	mailMock := mock_util.NewMockMailManager(ctrl)
 
-	service := NewUserService(repoMock, jwtMock, passwordMock, mailMock)
+	service := NewUserService(repoMock, jwtMock, passwordMock)
 
 	id := "123"
 	oldPassword := "oldPassword123"
